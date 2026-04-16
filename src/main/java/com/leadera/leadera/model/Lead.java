@@ -1,0 +1,50 @@
+package com.leadera.leadera.model;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "leads")
+@Data
+@NoArgsConstructor
+public class Lead {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String nombre;
+    private String apellido;
+    private String telefono;
+    private String email;
+    private LocalDateTime fechaEntrada;
+    private LocalDateTime ultimoContacto;
+
+    @Enumerated(EnumType.STRING)
+    private EstadoLead estado;
+
+    private LocalDateTime fechaProximoSeguimiento;
+
+    @Enumerated(EnumType.STRING)
+    private TipoLead tipoLead;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "busqueda_id")
+    private Busqueda busqueda;
+
+    @ManyToOne
+    @JoinColumn(name = "agente_id")
+    private Agente agente;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL)
+    private List<Interaccion> interacciones = new ArrayList<>();
+
+
+}
+
