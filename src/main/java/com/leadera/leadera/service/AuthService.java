@@ -1,6 +1,7 @@
 package com.leadera.leadera.service;
 
 import com.leadera.leadera.model.Agente;
+import com.leadera.leadera.model.LoginResponse;
 import com.leadera.leadera.repository.AgenteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,10 +17,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public String login(String email, String password) {
-        // 1. Imprimimos qué llega de Postman
-        System.out.println(">>> DEBUG: Intentando login con email: [" + email + "]");
-        System.out.println(">>> DEBUG: Intentando login con password: [" + password + "]");
+    public LoginResponse login(String email, String password) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, password)
@@ -28,10 +26,16 @@ public class AuthService {
         Agente agente = agenteRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Agente no encontrado con email: " + email));
 
+        String token = jwtService.generarToken(agente, agente.getId());
 
-        return jwtService.generarToken(agente);
-
+        return new LoginResponse(
+                token,
+                agente.getNombre(),
+                agente.getApellido(),
+                agente.getEmail()
+        );
     }
+
     public String registrar(Agente agente) {
         //Encriptamos contraseña antes de guardar
         agente.setPassword(passwordEncoder.encode(agente.getPassword()));

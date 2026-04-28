@@ -1,5 +1,6 @@
 package com.leadera.leadera.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class Lead {
     private LocalDateTime ultimoContacto;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "estado", length = 20)
     private EstadoLead estado;
 
     private LocalDateTime fechaProximoSeguimiento;
@@ -39,6 +41,7 @@ public class Lead {
 
     @ManyToOne
     @JoinColumn(name = "agente_id")
+    @JsonIgnoreProperties({"leads", "password", "hibernateLazyInitializer", "handler"})
     private Agente agente;
 
     @JsonManagedReference

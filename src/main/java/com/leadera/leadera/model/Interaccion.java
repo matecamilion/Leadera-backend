@@ -28,5 +28,4 @@ public class Interaccion {
     @JoinColumn(name = "lead_id")
     private Lead lead;
 
-
 }

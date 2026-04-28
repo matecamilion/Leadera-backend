@@ -1,6 +1,7 @@
 package com.leadera.leadera.controller;
 
 import com.leadera.leadera.model.Agente;
+import com.leadera.leadera.model.LoginResponse;
 import com.leadera.leadera.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +27,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Agente agente) {
-        try{
-            String token = authService.login(agente.getEmail(),  agente.getPassword());
-            return ResponseEntity.ok(token);
-        } catch(Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(401).body("Error real: " + e.getMessage());
+    public ResponseEntity<?> login(@RequestBody Agente agente) {
+        try {
+            LoginResponse response = authService.login(agente.getEmail(), agente.getPassword());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Credenciales inválidas");
         }
     }
 }

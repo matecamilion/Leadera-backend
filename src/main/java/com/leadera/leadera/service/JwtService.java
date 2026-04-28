@@ -19,9 +19,12 @@ public class JwtService {
     private static final String SECRET_KEY = "SECRET_KEY_MUY_LARGA_PARA_EL_PROYECTO_LEADERA_2026_123456";
 
     //Generar el token para un agente especifico
-    public String generarToken(UserDetails userDetails) {
+    public String generarToken(UserDetails userDetails, Long id) {
+        HashMap<String, Object> claims = new HashMap<>();
+        claims.put("id", id);
+
         return Jwts.builder()
-                .setClaims(new HashMap<>())
+                .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))

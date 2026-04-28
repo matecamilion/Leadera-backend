@@ -1,6 +1,7 @@
 package com.leadera.leadera.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
