@@ -21,11 +21,14 @@ public class InteraccionService {
     }
 
     public Interaccion crearInteraccion(Long leadId, Interaccion interaccion, LocalDateTime fechaProximoContacto) {
+        System.out.println("Fecha próximo contacto recibida: " + fechaProximoContacto);
+
         Lead lead = leadRepository.findById(leadId)
                 .orElseThrow(() -> new RuntimeException("No existe el lead con el id: " + leadId));
 
         interaccion.setLead(lead);
         if(interaccion.getFechaInteraccion() == null) {
+
             interaccion.setFechaInteraccion(LocalDateTime.now());
         }
         if(interaccion.getTipoInteraccion() == null) {

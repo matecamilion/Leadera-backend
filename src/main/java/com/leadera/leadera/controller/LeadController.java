@@ -73,7 +73,7 @@ public class LeadController {
         return leadService.cambiarEstado(id, nuevoEstado);
     }
 
-    // ESTE ES EL DEL DASHBOARD (El que arregla tu pantalla principal)
+
     @GetMapping("/hoy")
     public LeadsHoyResponse obtenerLeadsDeHoy(Authentication authentication) {
         return leadService.obtenerLeadsDeHoy(authentication.getName());

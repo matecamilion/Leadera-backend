@@ -49,5 +49,10 @@ public class Lead {
     private List<Interaccion> interacciones = new ArrayList<>();
 
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL)
+    private List<Propiedad> propiedades = new ArrayList<>();
+
+
 }
 

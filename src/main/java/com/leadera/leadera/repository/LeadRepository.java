@@ -18,21 +18,27 @@ public interface LeadRepository extends JpaRepository<Lead, Long> {
 
     // Estos son los que usa tu Dashboard:
     List<Lead> findByUltimoContactoIsNullAndAgenteEmail(String email);
-    List<Lead> findByUltimoContactoAfterAndAgenteEmail(LocalDateTime fecha, String email);
+
     List<Lead> findByAgenteEmail(String email);
     long countByAgenteIdAndEstadoNot(Long agenteId, EstadoLead estado);
 
     // 2. PRIORITARIOS + FILTRO AGENTE
     List<Lead> findByEstadoAndUltimoContactoBeforeAndAgenteEmail(EstadoLead estado, LocalDateTime fechaLimite, String email);
 
-    // 3. LA QUERY MAESTRA PARA SEGUIMIENTOS (Actualizada con el AND l.agente.email)
-    @Query("SELECT l FROM Lead l WHERE l.fechaProximoSeguimiento <= :finHoy " +
-            "AND (l.ultimoContacto < :inicioHoy OR l.ultimoContacto IS NULL) " +
-            "AND l.estado != 'CERRADO' " +
-            "AND l.agente.email = :email") // <--- AGREGAMOS ESTO
-    List<Lead> findSeguimientosPendientes(@Param("inicioHoy") LocalDateTime inicioHoy,
-                                          @Param("finHoy") LocalDateTime finHoy,
-                                          @Param("email") String email); // <--- Y ESTO
+    @Query("""
+    SELECT l FROM Lead l 
+    WHERE l.fechaProximoSeguimiento IS NOT NULL
+    AND l.fechaProximoSeguimiento <= :ahora
+    AND l.estado <> :ganado
+    AND l.estado <> :inactivo
+    AND l.agente.email = :email
+""")
+    List<Lead> findSeguimientosPendientes(
+            @Param("ahora") LocalDateTime ahora,
+            @Param("email") String email,
+            @Param("ganado") EstadoLead ganado,
+            @Param("inactivo") EstadoLead inactivo
+    );
 
     // 4. OTROS MÉTODOS (Si los usás, agregales el filtro también)
     List<Lead> findByUltimoContactoBeforeAndUltimoContactoIsNotNullAndAgenteEmail(LocalDateTime fecha, String email);
@@ -63,4 +69,10 @@ public interface LeadRepository extends JpaRepository<Lead, Long> {
     boolean existsByAgenteEmailAndTelefonoAndIdNot(String agenteEmail, String telefono, Long id);
     boolean existsByAgenteEmailAndEmailAndIdNot(String agenteEmail, String email, Long id);
 
+
+    // Traer nuevos que NO estén ganados (por si acaso se ganó uno sin contacto previo)
+    List<Lead> findByUltimoContactoIsNullAndAgenteEmailAndEstadoNot(String email, EstadoLead estado);
+
+    // Traer los contactados hoy (aquí sí podrías querer ver los que ganaste hoy como "tarea cumplida")
+    List<Lead> findByUltimoContactoAfterAndAgenteEmail(LocalDateTime fecha, String email);
 }

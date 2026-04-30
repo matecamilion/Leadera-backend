@@ -110,17 +110,22 @@ public class LeadService {
         LocalDateTime finHoy = ahora.toLocalDate().atTime(23, 59, 59);
 
         // Agregamos el "email" a todas las llamadas del repository:
-        List<Lead> nuevos = leadRepository.findByUltimoContactoIsNullAndAgenteEmail(email);
+        List<Lead> nuevos = leadRepository.findByUltimoContactoIsNullAndAgenteEmailAndEstadoNot(email, EstadoLead.GANADO);
 
         // Para prioritarios, usá el método de abajo o el nuevo del repository
         LocalDateTime fechaLimitePrioritarios = LocalDateTime.now().minusDays(7);
         List<Lead> prioritarios = leadRepository.findByEstadoAndUltimoContactoBeforeAndAgenteEmail(EstadoLead.CALIENTE, fechaLimitePrioritarios, email);
 
-        List<Lead> seguimientos = leadRepository.findSeguimientosPendientes(inicioHoy, finHoy, email);
+        List<Lead> seguimientos = leadRepository.findSeguimientosPendientes(
+                ahora,
+                email,
+                EstadoLead.GANADO,
+                EstadoLead.INACTIVO
+        );
 
         List<Lead> yaContactados = leadRepository.findByUltimoContactoAfterAndAgenteEmail(inicioHoy, email);
 
-        // El resto de la lógica de métricas queda igual...
+
         int totalTareas = nuevos.size() + prioritarios.size() + seguimientos.size() + yaContactados.size();
         int completadas = yaContactados.size();
 
