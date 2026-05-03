@@ -26,6 +26,12 @@ public class PropiedadController {
     public ResponseEntity<Propiedad> agregarPropiedad(@PathVariable Long leadId,
                                                       @RequestBody Propiedad propiedad,
                                                       Authentication authentication) {
+        System.out.println("====== AGREGAR PROPIEDAD CONTROLLER ======");
+        System.out.println("Lead ID recibido: " + leadId);
+        System.out.println("Usuario autenticado: " + authentication.getName());
+        System.out.println("Dirección recibida: " + propiedad.getDireccion());
+        System.out.println("Tipo vivienda recibido: " + propiedad.getTipoVivienda());
+        System.out.println("Fecha publicación recibida: " + propiedad.getFechaPublicacion());
         return ResponseEntity.ok(propiedadService.agregarPropiedad(leadId, propiedad, authentication.getName()));
     }
 

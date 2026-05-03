@@ -1,6 +1,7 @@
 package com.leadera.leadera.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -42,5 +43,14 @@ public class Operacion {
     @JoinColumn(name = "agente_id", nullable = false)
     @JsonIgnore
     private Agente agente;
+
+    @ManyToOne
+    @JoinColumn(name = "propiedad_id")
+    @JsonIgnoreProperties({"lead", "eventos"})
+    private Propiedad propiedad;
+
+    @ManyToOne
+    @JoinColumn(name = "busqueda_id")
+    private Busqueda busqueda;
 
 }

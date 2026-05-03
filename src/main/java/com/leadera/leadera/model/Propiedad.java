@@ -53,11 +53,10 @@ public class Propiedad {
     @Enumerated(EnumType.STRING)
     private EstadoPropiedad estado = EstadoPropiedad.DISPONIBLE;
 
-    // Calculado, no persistido
     @Transient
     public long getDiasEnMercado() {
         if (fechaPublicacion == null) return 0;
-        return ChronoUnit.DAYS.between(fechaPublicacion, LocalDate.now());
+        return ChronoUnit.DAYS.between(fechaPublicacion.toLocalDate(), LocalDate.now());
     }
 
 }
