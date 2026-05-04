@@ -132,18 +132,6 @@ public class LeadService {
         return new LeadsHoyResponse(nuevos, prioritarios, seguimientos, yaContactados, totalTareas, completadas);
     }
 
-    public Lead guardarBusqueda(Long id, Busqueda nuevaBusqueda) {
-        // Buscamos el lead, si no existe lanzamos una excepción o manejamos el error
-        Lead lead = leadRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Lead no encontrado con id: " + id));
-
-        // Actualizamos la relación
-        lead.setBusqueda(nuevaBusqueda);
-
-        // Guardamos (esto hace un update en la DB si el ID ya existe)
-        return leadRepository.save(lead);
-    }
-
     public Lead establecerLeadInactivo(Long id) {
         Lead lead = leadRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Lead no encontrado"));
