@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface OperacionRepository extends JpaRepository<Operacion, Integer> {
+public interface OperacionRepository extends JpaRepository<Operacion, Long> {
     List<Operacion> findByLeadIdAndAgenteEmail(Long leadId, String email);
 
     List<Operacion> findByLeadIdAndAgenteEmailAndEstadoOperacionNotIn(

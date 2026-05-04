@@ -79,16 +79,6 @@ public class LeadController {
         return leadService.obtenerLeadsDeHoy(authentication.getName());
     }
 
-    @PutMapping("/{id}/busqueda")
-    public ResponseEntity<Lead> guardarBusqueda(@PathVariable Long id, @RequestBody Busqueda nuevaBusqueda) {
-        try {
-            Lead leadActualizado = leadService.guardarBusqueda(id, nuevaBusqueda);
-            return ResponseEntity.ok(leadActualizado);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @PatchMapping("/{id}/estado")
     public ResponseEntity<Lead> establecerLeadInactivo(@PathVariable Long id) {
         try{

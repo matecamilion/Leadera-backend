@@ -32,13 +32,6 @@ public class Lead {
 
     private LocalDateTime fechaProximoSeguimiento;
 
-    @Enumerated(EnumType.STRING)
-    private TipoLead tipoLead;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "busqueda_id")
-    private Busqueda busqueda;
-
     @ManyToOne
     @JoinColumn(name = "agente_id")
     @JsonIgnoreProperties({"leads", "password", "hibernateLazyInitializer", "handler"})

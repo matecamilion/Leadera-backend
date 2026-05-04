@@ -56,7 +56,7 @@ public class OperacionService {
         }
 
         if (operacionRequest.getTipoOperacion() == TipoOperacion.COMPRA) {
-            asociarBusquedaACompra(operacion, operacionRequest, lead);
+            asociarBusquedaACompra(operacion, operacionRequest);
         }
 
         return operacionRepository.save(operacion);
@@ -80,21 +80,16 @@ public class OperacionService {
         operacion.setBusqueda(null);
     }
 
-    private void asociarBusquedaACompra(Operacion operacion, Operacion operacionRequest, Lead lead) {
-        if (operacionRequest.getBusqueda() == null || operacionRequest.getBusqueda().getId() == null) {
+    private void asociarBusquedaACompra(Operacion operacion, Operacion operacionRequest) {
+        if (operacionRequest.getBusqueda() == null) {
             throw new RuntimeException("Una operación de compra debe tener una búsqueda asociada");
         }
 
-        Long busquedaId = operacionRequest.getBusqueda().getId();
+        Busqueda busqueda = operacionRequest.getBusqueda();
+        busqueda.setId(null);
+        Busqueda busquedaGuardada = busquedaRepository.save(busqueda);
 
-        Busqueda busqueda = busquedaRepository.findById(busquedaId)
-                .orElseThrow(() -> new RuntimeException("No existe la búsqueda con id: " + busquedaId));
-
-        if (lead.getBusqueda() == null || !lead.getBusqueda().getId().equals(busqueda.getId())) {
-            throw new RuntimeException("La búsqueda no pertenece a este lead");
-        }
-
-        operacion.setBusqueda(busqueda);
+        operacion.setBusqueda(busquedaGuardada);
         operacion.setPropiedad(null);
     }
 
